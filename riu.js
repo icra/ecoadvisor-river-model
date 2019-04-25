@@ -25,7 +25,7 @@ class Tram {
     this.plant=null;//<Plant>
   }
 
-  /*Resultats*/
+  /*Càlculs equacions pdf*/
     //calcula angle "alfa" entre la llera i el màxim del canal (bankfull) (radiants)
     get angle(){return Math.asin((this.wt-this.wb)/(2*this.Db));}
     //calcula fondària màxima (m)

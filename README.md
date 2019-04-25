@@ -2,7 +2,8 @@ _status_: en desenvolupament (maig 2019)
 
 # river-model (ecoadvisor)
 
-Model de trams de riu que es poden connectar entre sí per modelar un riu o una xarxa de rius.
+Model de trams de riu que es poden connectar entre sí per modelar un riu o una
+xarxa de rius.
 
 Inputs per cada tram de riu:
 
@@ -17,20 +18,21 @@ Inputs per cada tram de riu:
 |Di    | m    |fondària concreta (m) |
 |Ti    | ºC   |temperatura |
 
-Les variables d'estat (concentracions contaminants) que s'han de definir només al principi del riu, estan definits a:
-https://github.com/icra/uct-icra-model
-
-són:
+Les variables d'estat (concentracions contaminants) que s'han de definir només
+al principi del riu, estan definits a:
+https://github.com/icra/uct-icra-model/blob/master/src/state-variables.js
 
 |símbol|unitat|descripció|
 |------|------|----------|
-| S_VFA | mg/L | Biodegradable   Soluble     Organics (BSO) (volatile fatty acids)
-| S_FBSO| mg/L | Biodegradable   Soluble     Organics (BSO) (fermentable organics)
-| X_BPO | mg/L | Biodegradable   Particulate Organics (BPO)
-| X_UPO | mg/L | Unbiodegradable Particulate Organics (UPO)
-| S_USO | mg/L | Unbiodegradable Soluble     Organics (USO)
-| X_iSS | mg/L | Inert Suspended Solids (sand)
-| S_FSA | mg/L | Inorganic Free Saline Ammonia (NH4)
-| S_OP  | mg/L | Inorganic OrthoPhosphate (PO4)
-| S_NOx | mg/L | Inorganic Nitrite and Nitrate (NO2 + NO3) (not part of TKN)
-| X_OHO | mg/L | Ordinary Heterotrophic Organisms (expressed as COD) influent OHO should always be 0 (model assumption)
+|S_VFA | mg/L | Biodegradable   Soluble     Organics (BSO) (volatile fatty acids)
+|S_FBSO| mg/L | Biodegradable   Soluble     Organics (BSO) (fermentable organics)
+|X_BPO | mg/L | Biodegradable   Particulate Organics (BPO)
+|X_UPO | mg/L | Unbiodegradable Particulate Organics (UPO)
+|S_USO | mg/L | Unbiodegradable Soluble     Organics (USO)
+|X_iSS | mg/L | Inert Suspended Solids (sand)
+|S_FSA | mg/L | Inorganic Free Saline Ammonia (NH4)
+|S_OP  | mg/L | Inorganic OrthoPhosphate (PO4)
+|S_NOx | mg/L | Inorganic Nitrite and Nitrate (NO2 + NO3) (not part of TKN)
+|X_OHO | mg/L | Ordinary Heterotrophic Organisms (expressed as COD) influent OHO should always be 0 (model assumption)
+
+A partir d'aquests inputs es calculen els outputs de cada tram, veure "equacions-riu.pdf"

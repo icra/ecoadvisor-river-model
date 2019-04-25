@@ -13,16 +13,13 @@ class Tram {
     this.Li = isNaN(Li) ? 1000   : Li; //longitud tram (m)
     this.Di = isNaN(Di) ? 1.2    : Di; //fondària concreta (m)
     this.Ti = isNaN(Ti)  ? 12    : Ti; //ºC | temperatura
-
     //trams connectats upstream (pares). Definits per l'usuari.
-    this.pares=[];/*[<Tram>]*/
-
+    //this.pares=[];/*[<Tram>,<Tram>] array*/
     //State Variables(Q, VFA, FBSO, BPO, UPO, USO, iSS, FSA, OP, NOx, OHO) (inici del tram)
     //convert flowrate to ML/d (converted from m3/s)
-    this.state_variables=new State_Variables(this.Qi*86.4,0,0,0,0,0,0,0,0,0,0);
-
+    //this.state_variables=new State_Variables(this.Qi*86.4,0,0,0,0,0,0,0,0,0,0);
     //Planta que aboca al tram (per defecte no n'hi ha)
-    this.plant=null;//<Plant>
+    //this.plant=null;//<Plant> object (optional, from icra/uct-icra-model)
   }
 
   /*Càlculs equacions pdf*/
@@ -85,8 +82,8 @@ try{
 
 //test valors Vicenç Acuña (vacuna@icra.cat)
 (function(){
-  return
   //sintaxi:  Tram(wb, wt, Db, S,     n,      Li,   Di)
   let t = new Tram(3,  6,  2,  0.005, 0.0358, 1000, 1.2);
+  console.log(t);
   console.log(t.resultats);
 })();

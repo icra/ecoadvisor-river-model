@@ -22,7 +22,8 @@ https://github.com/icra/uct-icra-model
 
 són:
 
-|símbol |unitat| descripció|
+|símbol|unitat|descripció|
+|------|------|----------|
 | S_VFA | mg/L | Biodegradable   Soluble     Organics (BSO) (volatile fatty acids)
 | S_FBSO| mg/L | Biodegradable   Soluble     Organics (BSO) (fermentable organics)
 | X_BPO | mg/L | Biodegradable   Particulate Organics (BPO)

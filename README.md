@@ -1,3 +1,5 @@
+_status_: en desenvolupament (maig 2019)
+
 # river-model (ecoadvisor)
 
 Model de trams de riu que es poden connectar entre sí per modelar un riu o una xarxa de rius.
@@ -15,11 +17,12 @@ Inputs per cada tram de riu:
 |Di    | m    |fondària concreta (m) |
 |Ti    | ºC   |temperatura |
 
-Les variables d'estat (concentracions contaminants) estan definits a:
+Les variables d'estat (concentracions contaminants) que s'han de definir només al principi del riu, estan definits a:
 https://github.com/icra/uct-icra-model
 
 són:
 
+|símbol |unitat| descripció|
 | S_VFA | mg/L | Biodegradable   Soluble     Organics (BSO) (volatile fatty acids)
 | S_FBSO| mg/L | Biodegradable   Soluble     Organics (BSO) (fermentable organics)
 | X_BPO | mg/L | Biodegradable   Particulate Organics (BPO)

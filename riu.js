@@ -1,5 +1,5 @@
 /*
-  Equacions d'un tram de riu: veure "docs/riu/equacions\ riu.docx"
+  Equacions per un tram de riu: veure "equacions-riu.pdf"
 */
 
 class Tram {

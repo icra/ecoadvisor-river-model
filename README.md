@@ -3,6 +3,7 @@
 Modelització de trams de riu que es poden connectar.
 
 Inputs:
+
 |símbol|descripció|
 |------|----------|
 |wb | amplada a llera mitjana (m) |

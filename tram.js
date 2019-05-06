@@ -12,7 +12,7 @@ class Tram {
     this.n  = isNaN(n ) ? 0.0358 : n ; //coeficient de manning (n) s'obté de regressió entre Qi i HRi també es pot usar el mètode de Verzano et al per determinar n, o usar el valor 0.0358, que és la mitjana europea.
     this.Li = isNaN(Li) ? 1000   : Li; //longitud tram (m)
     this.Di = isNaN(Di) ? 1.2    : Di; //fondària concreta (m)
-    this.Ti = isNaN(Ti)  ? 12    : Ti; //ºC | temperatura
+    this.Ti = isNaN(Ti) ? 12     : Ti; //ºC | temperatura
     //trams connectats upstream (pares). Definits per l'usuari.
     //this.pares=[];/*[<Tram>,<Tram>] array*/
     //State Variables(Q, VFA, FBSO, BPO, UPO, USO, iSS, FSA, OP, NOx, OHO) (inici del tram)

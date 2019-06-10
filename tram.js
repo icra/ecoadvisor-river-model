@@ -1,5 +1,10 @@
 /*
-  Equacions per un tram de riu: veure "equacions-riu.pdf"
+  Implementació equacions per un tram de riu: veure "equacions-riu.pdf"
+
+  Classe Tram
+    - constructor (inputs)
+    - resultats (outputs)
+    - Mf (degradació d'un component al llarg del tram)
 */
 
 class Tram {
@@ -22,7 +27,7 @@ class Tram {
     //this.plant=null;//<Plant> object (optional, from icra/uct-icra-model)
   }
 
-  /*Càlculs equacions pdf*/
+  /*càlculs equacions pdf*/
     //calcula angle "alfa" entre la llera i el màxim del canal (bankfull) (radiants)
     get angle(){return Math.asin((this.wt-this.wb)/(2*this.Db));}
     //calcula fondària màxima (m)
@@ -32,22 +37,22 @@ class Tram {
     get Ai() {return this.Di*(this.wb+this.Di*Math.tan(this.angle));} //m2 | area transversal inundada
     get wpi(){return this.wb + 2*this.Di/Math.cos(this.angle); }      //m  | perímetre humit inundat
     get HRi(){return this.Ai/this.wpi;                         }      //m  | radi hidràulic
-    //Amb n determinat podem estimar wi, Ai, wpi, HRi i Qi en funció de Di. 
+    //Amb n determinat podem estimar wi, Ai, wpi, HRi i Qi en funció de Di.
     get Qi()  {return (1/this.n)*Math.pow(this.HRi,2/3)*Math.sqrt(this.S);} //m3/s | cabal
     get HRTi(){return this.Li*this.Ai/this.Qi/60;                         } //min  | el temps mig de residència de l'aigua HRTi
     get Si()  {return this.Li*this.wpi;                                   } //m2   | la superfície inundada en el tram d'interès
-    /*Per a fer un seguiment, s’hauria de mirar estat químic i ecològic al 
-      final del tram fluvial, així com al final de tram de barreja lateral, punt a 
-      partir del qual la química de l’aigua és resultat de la barreja de la 
-      química dels trams fluvials i EDAR influents. La longitud del tram de barreja 
-      lateral (Ll) es determina a partir de paràmetres hidràulics, amplada (wi), 
-      coeficient de dispersió lateral (ky) i velocitat mitjana (u). El coeficient de 
-      dispersió lateral es calcula a partir de la fondària (Di), la força de la 
+    /*Per a fer un seguiment, s’hauria de mirar estat químic i ecològic al
+      final del tram fluvial, així com al final de tram de barreja lateral, punt a
+      partir del qual la química de l’aigua és resultat de la barreja de la
+      química dels trams fluvials i EDAR influents. La longitud del tram de barreja
+      lateral (Ll) es determina a partir de paràmetres hidràulics, amplada (wi),
+      coeficient de dispersió lateral (ky) i velocitat mitjana (u). El coeficient de
+      dispersió lateral es calcula a partir de la fondària (Di), la força de la
       gravetat (g), i la pendent de la llera fluvial (S): */
     get ky(){return 0.6*this.Di*Math.sqrt(9.81*this.S*this.Di)};      //coeficient de dispersió lateral (ky)
     get Ll(){return Math.pow(this.wi,2)*this.Qi/this.Ai/(2*this.ky);} //longitud del tram de barreja lateral (Ll)
 
-  //empaqueta els resultats
+  /*empaqueta els resultats*/
   get resultats(){return{
     angle:{value:this.angle, unit:"rad",  descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
     Dt   :{value:this.Dt,    unit:"m",    descr:"Fondària màxima"},
@@ -69,8 +74,10 @@ class Tram {
     //R_20: velocitat de reacció a 20ºC (g/m2·min)
     //k   : (input, es com una ks) (g/m3)
     if(Mi==0) return 0;
-    let Mf=Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20)*(Mi/(this.Qi*60))/(k+Mi/this.Qi);
-    return Mf;
+    let Mf = Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20)*(Mi/(this.Qi*60))/(k+Mi/this.Qi);
+    return {
+      Mf:{value:Mf, unit:"kg", descr:"massa al final del tram fluvial"},
+    }
   };
 }
 

@@ -1,0 +1,175 @@
+<!doctype html>
+<html><head>
+  <meta charset=utf8>
+  <title>Tram de riu</title>
+  <style>
+    main{
+      /*
+      display:grid;
+      grid-template-columns:50% 50%;
+      grid-gap:2px;
+      */
+    }
+    hr{
+      border:none;border-top:1px solid #ccc;
+    }
+    .unit, .descr {
+      font-size:smaller;
+    }
+    input[type=number]{
+      text-align:right;
+    }
+    table{
+      border-collapse:collapse;
+    }
+  </style>
+</head><body>
+
+<!--titol-->
+<h1>Interfície pel mòdul tram de riu (standalone)</h1>
+
+<h2>Un sol tram de riu</h2>
+
+<div>Instruccions: canviar inputs i apretar Enter per veure els outputs calculats.</div><hr>
+
+<!--main-->
+<main>
+  <h3>1. Característiques físiques</h3>
+  <div>
+    <b>1.1. Inputs</b>
+    <table id=inputs border=1></table>
+  </div><br>
+  <div>
+    <b>1.2. Outputs</b>
+    <table id=outputs border=1></table>
+  </div><hr>
+
+  <h3>2. Degradació contaminants</h3>
+  <div>
+    <div>
+      <b>2.1. Inputs degradació</b>
+      <table id=inputs_degradacio border=1></table>
+    </div><br>
+    <div>
+      <b>2.2. Outputs degradació</b>
+      <table id=outputs_degradacio border=1></table>
+    </div>
+  </div><hr>
+</main>
+
+<!--end-->
+</html>
+
+<!--frontend utils-->
+<script>
+  //number formatting
+  let nf=[
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:0}),
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:1}),
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:2}),
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:3}),
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:4}),
+    new Intl.NumberFormat('en-EN', {maximumFractionDigits:5}),
+  ];
+  function format(number,digits){
+    digits=digits||0;
+    let abs_number = Math.abs(number);
+    if(abs_number< 100   ) digits=1;
+    if(abs_number<  10   ) digits=2;
+    if(abs_number<   1   ) digits=3;
+    if(abs_number<   0.1 ) digits=4;
+    if(abs_number<   0.01) digits=5;
+    return nf[digits].format(number);
+  }
+</script>
+
+<!--load backend-->
+<script src="../tram.js"></script>
+
+<!--frontend-->
+<script>
+  //populate inputs table
+  let inputs = {
+    wb :{value: 3,      unit:"m",  descr:"amplada a llera mitjana"},
+    wt :{value: 6,      unit:"m",  descr:"amplada a bankful mitjana"},
+    Db :{value: 2,      unit:"m",  descr:"distància entre llera i bankfull mitjana"},
+    S  :{value: 0.005,  unit:"ø",  descr:"pendent de la llera: obtingut amb resolució mínima de 30m de pixel, i estimant la pendent per un tram d'1 km"},
+    n  :{value: 0.0358, unit:"ø",  descr:"coeficient de manning (n) s'obté de regressió entre Qi i HRi també es pot usar el mètode de Verzano et al per determinar n, o usar el valor 0.0358, que és la mitjana europea"},
+    Li :{value: 1000,   unit:"m",  descr:"longitud tram"},
+    Di :{value: 1.2,    unit:"m",  descr:"fondària concreta"},
+    Ti :{value: 12,     unit:"ºC", descr:"temperatura"},
+  };
+
+  let inputs_degradacio ={
+    Mi  :{value:10,    unit:"kg",       descr:"massa inici tram fluvial: suma dels diferents trams que alimenten el tram"},
+    R_20:{value:0.001, unit:"g/m2·min", descr:"velocitat de reacció a 20ºC"},
+    k   :{value:10,    unit:"g/m3",     descr:"constant de degradació (és com una ks)"},
+  };
+
+  //DOM
+  let table_inputs             = document.querySelector('#inputs');
+  let table_outputs            = document.querySelector('#outputs');
+  let table_inputs_degradacio  = document.querySelector('#inputs_degradacio');
+  let table_outputs_degradacio = document.querySelector('#outputs_degradacio');
+
+  function populate(taula,objecte){
+    Object.entries(objecte).forEach(([key,obj])=>{
+      let newRow = taula.insertRow(-1);
+      newRow.insertCell(-1).innerHTML=key;
+
+      //input element
+      let newCell = newRow.insertCell(-1);
+      let input = document.createElement('input');
+      newCell.appendChild(input);
+      input.type='number';
+      input.value=obj.value;
+      input.id=key;
+      input.addEventListener('keypress',function(ev){if(ev.which==13){run()}});
+
+      //unit and description
+      newRow.insertCell(-1).innerHTML=`<span class=unit>${obj.unit}</span>`;
+      newRow.insertCell(-1).innerHTML=`<span class=descr>${obj.descr}</span>`;
+    });
+  }
+
+  populate(table_inputs, inputs);
+  populate(table_inputs_degradacio, inputs_degradacio);
+
+  //run
+  function run(){
+    let tram = new Tram(
+      parseFloat(document.querySelector('#inputs #wb').value),
+      parseFloat(document.querySelector('#inputs #wt').value),
+      parseFloat(document.querySelector('#inputs #Db').value),
+      parseFloat(document.querySelector('#inputs #S').value),
+      parseFloat(document.querySelector('#inputs #n').value),
+      parseFloat(document.querySelector('#inputs #Li').value),
+      parseFloat(document.querySelector('#inputs #Di').value),
+    );
+
+    table_outputs.innerHTML="";
+    table_outputs_degradacio.innerHTML="";
+
+    let resultats            = tram.resultats;
+    let resultats_degradacio = tram.Mf(
+      parseFloat(document.querySelector('#inputs_degradacio #Mi').value),
+      parseFloat(document.querySelector('#inputs_degradacio #R_20').value),
+      parseFloat(document.querySelector('#inputs_degradacio #k').value),
+    );
+
+    function print_resultats(taula, objecte){
+      Object.entries(objecte).forEach(([key,obj])=>{
+        let newRow = taula.insertRow(-1);
+        newRow.insertCell(-1).innerHTML=key;
+        newRow.insertCell(-1).innerHTML=format(obj.value);
+        newRow.insertCell(-1).innerHTML=`<span class=unit>${obj.unit}</span>`;
+        newRow.insertCell(-1).innerHTML=`<span class=descr>${obj.descr}</span>`;
+      });
+    }
+
+    print_resultats(table_outputs, resultats);
+    print_resultats(table_outputs_degradacio, resultats_degradacio);
+  }
+
+  run();
+</script>

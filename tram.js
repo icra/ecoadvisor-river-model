@@ -73,8 +73,8 @@ class Tram {
     //Mi  : massa a l'inici del tram fluvial: suma dels diferents trams que alimenten el tram (kg)
     //R_20: velocitat de reacció a 20ºC (g/m2·min)
     //k   : (input, es com una ks) (g/m3)
-    if(Mi==0) return 0;
     let Mf = Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20)*(Mi/(this.Qi*60))/(k+Mi/this.Qi);
+    if(Mi==0) Mf=0;
     return {
       Mf:{value:Mf, unit:"kg", descr:"massa al final del tram fluvial"},
     }

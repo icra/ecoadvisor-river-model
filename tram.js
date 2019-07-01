@@ -18,13 +18,6 @@ class Tram {
     this.Li = isNaN(Li) ? 1000   : Li; //longitud tram (m)
     this.Di = isNaN(Di) ? 1.2    : Di; //fondària concreta (m)
     this.Ti = isNaN(Ti) ? 12     : Ti; //ºC | temperatura
-    //trams connectats upstream (pares). Definits per l'usuari.
-    //this.pares=[];/*[<Tram>,<Tram>] array*/
-    //State Variables(Q, VFA, FBSO, BPO, UPO, USO, iSS, FSA, OP, NOx, OHO) (inici del tram)
-    //convert flowrate to ML/d (converted from m3/s)
-    //this.state_variables=new State_Variables(this.Qi*86.4,0,0,0,0,0,0,0,0,0,0);
-    //Planta que aboca al tram (per defecte no n'hi ha)
-    //this.plant=null;//<Plant> object (optional, from icra/uct-icra-model)
   }
 
   /*càlculs equacions pdf*/
@@ -40,6 +33,7 @@ class Tram {
     //Amb n determinat podem estimar wi, Ai, wpi, HRi i Qi en funció de Di.
     get Qi()  {return (1/this.n)*Math.pow(this.HRi,2/3)*Math.sqrt(this.S);} //m3/s | cabal
     get HRTi(){return this.Li*this.Ai/this.Qi/60;                         } //min  | el temps mig de residència de l'aigua HRTi
+    get Vi()  {return this.Li/this.HRTi}                                    //m/min
     get Si()  {return this.Li*this.wpi;                                   } //m2   | la superfície inundada en el tram d'interès
     /*Per a fer un seguiment, s’hauria de mirar estat químic i ecològic al
       final del tram fluvial, així com al final de tram de barreja lateral, punt a
@@ -54,15 +48,17 @@ class Tram {
 
   /*empaqueta els resultats*/
   get resultats(){return{
-    angle:{value:this.angle, unit:"rad",  descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
-    Dt   :{value:this.Dt,    unit:"m",    descr:"Fondària màxima"},
-    wi   :{value:this.wi,    unit:"m",    descr:"Amplada de la llera inundada"},
-    Ai   :{value:this.Ai,    unit:"m2",   descr:"Àrea transversal inundada"},
-    wpi  :{value:this.wpi,   unit:"m",    descr:"Perímetre humit inundat"},
-    HRi  :{value:this.HRi,   unit:"m",    descr:"Radi hidràulic"},
-    Qi   :{value:this.Qi,    unit:"m3/s", descr:"Cabal"},
-    HRTi :{value:this.HRTi,  unit:"min",  descr:"Temps mig de residència de l'aigua"},
-    Si   :{value:this.Si,    unit:"m2",   descr:"Superfície inundada"},
+    angle:{value:this.angle, unit:"rad",   descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
+    Dt   :{value:this.Dt,    unit:"m",     descr:"Fondària màxima"},
+    wi   :{value:this.wi,    unit:"m",     descr:"Amplada de la llera inundada"},
+    Ai   :{value:this.Ai,    unit:"m2",    descr:"Àrea transversal inundada"},
+    wpi  :{value:this.wpi,   unit:"m",     descr:"Perímetre humit inundat"},
+    HRi  :{value:this.HRi,   unit:"m",     descr:"Radi hidràulic"},
+    Qi   :{value:this.Qi,    unit:"m3/s",  descr:"Cabal en m3/s"},
+    Qi_MLd :{value:this.Qi*86.4, unit:"ML/d",  descr:"Cabal en ML/d"},
+    HRTi :{value:this.HRTi,  unit:"min",   descr:"Temps mig de residència de l'aigua"},
+    Vi   :{value:this.Vi,    unit:"m/min", descr:"Velocitat mitjana"},
+    Si   :{value:this.Si,    unit:"m2",    descr:"Superfície inundada"},
     //ky   :{value:this.ky,    unit:"?",    descr:"Coeficient de dispersió lateral"},
     //Ll   :{value:this.Ll,    unit:"m",    descr:"Longitud del tram de barreja lateral"},
   }};
@@ -79,6 +75,19 @@ class Tram {
       Mf:{value:Mf, unit:"kg", descr:"massa al final del tram fluvial"},
     }
   };
+
+  static get info(){
+    return {
+      wb:{unit:"m",  descr:"Amplada a llera mitjana"},
+      wt:{unit:"m",  descr:"Amplada a bankful mitjana"},
+      Db:{unit:"m",  descr:"Distància entre llera i bankfull mitjana"},
+      S: {unit:"ø",  descr:"Pendent de la llera: obtingut amb resolució mínima de 30m de pixel, i estimant la pendent per un tram d'1 km"},
+      n: {unit:"?",  descr:"Coeficient de manning (n) s'obté de regressió entre Qi i HRi també es pot usar el mètode de Verzano et al per determinar n, o usar el valor 0.0358, que és la mitjana europea."},
+      Li:{unit:"m",  descr:"Longitud tram"},
+      Di:{unit:"m",  descr:"Fondària concreta"},
+      Ti:{unit:"ºC", descr:"Temperatura"},
+    }
+  }
 }
 
 //export class

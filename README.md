@@ -1,4 +1,4 @@
-_status_: en desenvolupament (maig 2019)
+_status_: en desenvolupament (març 2020)
 
 # river-model (ecoadvisor)
 

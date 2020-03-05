@@ -1,11 +1,9 @@
-_status_: en desenvolupament (març 2020)
-
-# river-model (ecoadvisor)
+# river-model (per Vicenç Acuña)
 
 Model d'un sol tram de riu. Es pot fer servir per crear un nou model on es
 puguin connectar entre sí per modelar un riu o una xarxa de rius.
 
-Inputs per un sol tram de riu:
+Inputs:
 
 |símbol|unitat|descripció|
 |------|------|----------|
@@ -18,8 +16,24 @@ Inputs per un sol tram de riu:
 |Di    | m    |fondària concreta (m) |
 |Ti    | ºC   |temperatura |
 
-Les variables d'estat (concentracions contaminants) que s'han de definir només
-al principi del riu, estan definits a:
+Outputs:
+
+|símbol|unitat|descripció|
+|------|------|----------|
+|angle | rad  | Angle entre la llera i el màxim del canal (bankful)
+|Dt    | m    | Fondària màxima
+|wi    | m    | Amplada de la llera inundada
+|Ai    | m2   | Àrea transversal inundada
+|wpi   | m    | Perímetre humit inundat
+|HRi   | m    | Radi hidràulic
+|Qi    | m3/s | Cabal en m3/s
+|Qi_MLd| ML/d | Cabal en ML/d
+|HRTi  | min  | Temps mig de residència de l'aigua
+|Vi    | m/min| Velocitat mitjana
+|Si    | m2   | Superfície inundada
+
+Les concentracions de contaminants del tram de riu formen part d'un altre
+model. Un exemple que es pot fer servir és:
 https://github.com/icra/uct-icra-model/blob/master/src/state-variables.js
 
 |símbol|unitat|descripció|
@@ -36,5 +50,3 @@ https://github.com/icra/uct-icra-model/blob/master/src/state-variables.js
 |S_O2  | mg/L | Dissolved Oxygen
 |X_OHO | mg/L | Ordinary Heterotrophic Organisms (expressed as COD) influent OHO should always be 0 (model assumption)
 |X_PAO | mg/L | Polyphosphate Accumulating Organisms (expressed as COD) influent PAO should always be 0 (model assumption)
-
-A partir d'aquests inputs es calculen els outputs de cada tram, veure "equacions-riu.pdf"

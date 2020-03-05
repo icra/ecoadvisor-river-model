@@ -97,7 +97,7 @@ try{module.exports=Tram;}catch(e){}
 
 //test valors Vicenç Acuña (vacuna@icra.cat)
 (function(){
-  //return
+  return
   //syntax:          (wb, wt, Db,     S,      n,   Li,  Di)
   let tram = new Tram( 3,  6,  2, 0.005, 0.0358, 1000, 1.2);
   console.log(tram);

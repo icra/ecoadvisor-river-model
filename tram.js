@@ -69,7 +69,6 @@ class Tram {
     //Mi  : massa a l'inici del tram fluvial: suma dels diferents trams que alimenten el tram (kg)
     //R_20: velocitat de reacció a 20ºC (g/m2·min)
     //k   : (input, es com una ks) (g/m3)
-
     let Mf = Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20)*(Mi/(this.Qi*60))/(k+Mi/this.Qi);
 
     if(Mi==0) Mf=0;
@@ -98,9 +97,9 @@ try{module.exports=Tram;}catch(e){}
 
 //test valors Vicenç Acuña (vacuna@icra.cat)
 (function(){
-  return
-  //sintaxi: new Tram(wb wt Db      S       n    Li   Di)
-  let tram = new Tram( 3, 6, 2, 0.005, 0.0358, 1000, 1.2);
+  //return
+  //syntax:          (wb, wt, Db,     S,      n,   Li,  Di)
+  let tram = new Tram( 3,  6,  2, 0.005, 0.0358, 1000, 1.2);
   console.log(tram);
   console.log(tram.resultats);
 })();

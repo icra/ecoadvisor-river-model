@@ -48,19 +48,19 @@ class Tram {
 
   /*empaqueta els resultats*/
   get resultats(){return{
-    angle:{value:this.angle, unit:"rad",   descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
-    Dt   :{value:this.Dt,    unit:"m",     descr:"Fondària màxima"},
-    wi   :{value:this.wi,    unit:"m",     descr:"Amplada de la llera inundada"},
-    Ai   :{value:this.Ai,    unit:"m2",    descr:"Àrea transversal inundada"},
-    wpi  :{value:this.wpi,   unit:"m",     descr:"Perímetre humit inundat"},
-    HRi  :{value:this.HRi,   unit:"m",     descr:"Radi hidràulic"},
-    Qi   :{value:this.Qi,    unit:"m3/s",  descr:"Cabal en m3/s"},
+    angle  :{value:this.angle,   unit:"rad",   descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
+    Dt     :{value:this.Dt,      unit:"m",     descr:"Fondària màxima"},
+    wi     :{value:this.wi,      unit:"m",     descr:"Amplada de la llera inundada"},
+    Ai     :{value:this.Ai,      unit:"m2",    descr:"Àrea transversal inundada"},
+    wpi    :{value:this.wpi,     unit:"m",     descr:"Perímetre humit inundat"},
+    HRi    :{value:this.HRi,     unit:"m",     descr:"Radi hidràulic"},
+    Qi     :{value:this.Qi,      unit:"m3/s",  descr:"Cabal en m3/s"},
     Qi_MLd :{value:this.Qi*86.4, unit:"ML/d",  descr:"Cabal en ML/d"},
-    HRTi :{value:this.HRTi,  unit:"min",   descr:"Temps mig de residència de l'aigua"},
-    Vi   :{value:this.Vi,    unit:"m/min", descr:"Velocitat mitjana"},
-    Si   :{value:this.Si,    unit:"m2",    descr:"Superfície inundada"},
-    //ky   :{value:this.ky,    unit:"?",    descr:"Coeficient de dispersió lateral"},
-    //Ll   :{value:this.Ll,    unit:"m",    descr:"Longitud del tram de barreja lateral"},
+    HRTi   :{value:this.HRTi,    unit:"min",   descr:"Temps mig de residència de l'aigua"},
+    Vi     :{value:this.Vi,      unit:"m/min", descr:"Velocitat mitjana"},
+    Si     :{value:this.Si,      unit:"m2",    descr:"Superfície inundada"},
+    //ky   :{value:this.ky,      unit:"?",     descr:"Coeficient de dispersió lateral"},
+    //Ll   :{value:this.Ll,      unit:"m",     descr:"Longitud del tram de barreja lateral"},
   }};
 
   //massa o càrrega al final del tram 'Mf' degut a la degradació per un sol component 'Mi'

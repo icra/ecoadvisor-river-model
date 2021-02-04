@@ -32,6 +32,7 @@ class Tram {
     get HRi(){return this.Ai/this.wpi;                         }      //m  | radi hidràulic
     //Amb n determinat podem estimar wi, Ai, wpi, HRi i Qi en funció de Di.
     get Qi()  {return (1/this.n)*Math.pow(this.HRi,2/3)*Math.sqrt(this.S);} //m3/s | cabal
+    get Qi_MLd(){return this.Qi*86.4;} //ML/d | cabal convertit a ML/d
     get HRTi(){return this.Li*this.Ai/this.Qi/60;                         } //min  | el temps mig de residència de l'aigua HRTi
     get Vi()  {return this.Li/this.HRTi}                                    //m/min
     get Si()  {return this.Li*this.wpi;                                   } //m2   | la superfície inundada en el tram d'interès
@@ -55,7 +56,7 @@ class Tram {
     wpi    :{value:this.wpi,     unit:"m",     descr:"Perímetre humit inundat"},
     HRi    :{value:this.HRi,     unit:"m",     descr:"Radi hidràulic"},
     Qi     :{value:this.Qi,      unit:"m3/s",  descr:"Cabal en m3/s"},
-    Qi_MLd :{value:this.Qi*86.4, unit:"ML/d",  descr:"Cabal en ML/d"},
+    Qi_MLd :{value:this.Qi_MLd,  unit:"ML/d",  descr:"Cabal en ML/d"},
     HRTi   :{value:this.HRTi,    unit:"min",   descr:"Temps mig de residència de l'aigua"},
     Vi     :{value:this.Vi,      unit:"m/min", descr:"Velocitat mitjana"},
     Si     :{value:this.Si,      unit:"m2",    descr:"Superfície inundada"},

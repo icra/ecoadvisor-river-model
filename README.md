@@ -1,4 +1,4 @@
-# river-model (per Vicenç Acuña)
+# river-model (V. Acuña, vacuna@icra.cat. Implementat per L. Bosch, lbosch@icra.cat)
 
 Model d'un sol tram de riu. Es pot fer servir per crear un nou model on es
 puguin connectar entre sí per modelar un riu o una xarxa de rius.

@@ -23,19 +23,22 @@ class Tram {
   /*càlculs equacions pdf*/
     //calcula angle "alfa" entre la llera i el màxim del canal (bankfull) (radiants)
     get angle(){return Math.asin((this.wt-this.wb)/(2*this.Db));}
+
     //calcula fondària màxima (m)
     get Dt(){return this.Db*Math.cos(this.angle);}
+
     //en funció de la fondària (Di), tenim wi, Ai, wpi, HRi i Qi
-    get wi() {return this.wb + 2*this.Di*Math.tan(this.angle); }      //m  | amplada de la llera inundada
+    get wi() {return this.wb + 2*this.Di*Math.tan(this.angle);}       //m  | amplada de la llera inundada
     get Ai() {return this.Di*(this.wb+this.Di*Math.tan(this.angle));} //m2 | area transversal inundada
-    get wpi(){return this.wb + 2*this.Di/Math.cos(this.angle); }      //m  | perímetre humit inundat
-    get HRi(){return this.Ai/this.wpi;                         }      //m  | radi hidràulic
+    get wpi(){return this.wb + 2*this.Di/Math.cos(this.angle);}       //m  | perímetre humit inundat
+    get HRi(){return this.Ai/this.wpi;}                               //m  | radi hidràulic
+
     //Amb n determinat podem estimar wi, Ai, wpi, HRi i Qi en funció de Di.
-    get Qi()  {return (1/this.n)*Math.pow(this.HRi,2/3)*Math.sqrt(this.S);} //m3/s | cabal
-    get Qi_MLd(){return this.Qi*86.4;} //ML/d | cabal convertit a ML/d
-    get HRTi(){return this.Li*this.Ai/this.Qi/60;                         } //min  | el temps mig de residència de l'aigua HRTi
-    get Vi()  {return this.Li/this.HRTi}                                    //m/min
-    get Si()  {return this.Li*this.wpi;                                   } //m2   | la superfície inundada en el tram d'interès
+    get Qi()    {return (1/this.n)*Math.pow(this.HRi,2/3)*Math.sqrt(this.S);} //m3/s | cabal
+    get Qi_MLd(){return this.Qi*86.4;}                                        //ML/d | cabal convertit a ML/d
+    get HRTi()  {return this.Li*this.Ai/this.Qi/60;}                          //min  | el temps mig de residència de l'aigua HRTi
+    get Vi()    {return this.Li/this.HRTi;}                                   //m/min
+    get Si()    {return this.Li*this.wpi;}                                    //m2   | la superfície inundada en el tram d'interès
     /*Per a fer un seguiment, s’hauria de mirar estat químic i ecològic al
       final del tram fluvial, així com al final de tram de barreja lateral, punt a
       partir del qual la química de l’aigua és resultat de la barreja de la
@@ -95,12 +98,3 @@ class Tram {
 
 //export class
 try{module.exports=Tram;}catch(e){}
-
-//test valors Vicenç Acuña (vacuna@icra.cat)
-(function(){
-  return
-  //syntax:          (wb, wt, Db,     S,      n,   Li,  Di)
-  let tram = new Tram( 3,  6,  2, 0.005, 0.0358, 1000, 1.2);
-  console.log(tram);
-  console.log(tram.resultats);
-})();

@@ -16,6 +16,7 @@ class Tram {
     this.S  = isNaN(S ) ? 0.005  : S ; //pendent de la llera: obtingut amb resolució mínima de 30m de pixel, i estimant la pendent per un tram d'1 km
     this.n  = isNaN(n ) ? 0.0358 : n ; //coeficient de manning (n) s'obté de regressió entre Qi i HRi també es pot usar el mètode de Verzano et al per determinar n, o usar el valor 0.0358, que és la mitjana europea.
     this.Li = isNaN(Li) ? 1000   : Li; //longitud tram (m)
+    //per calcular massa final: Di i Ti
     this.Di = isNaN(Di) ? 1.2    : Di; //fondària concreta (m)
     this.Ti = isNaN(Ti) ? 12     : Ti; //ºC | temperatura
   }
@@ -46,43 +47,65 @@ class Tram {
       lateral (Ll) es determina a partir de paràmetres hidràulics, amplada (wi),
       coeficient de dispersió lateral (ky) i velocitat mitjana (u). El coeficient de
       dispersió lateral es calcula a partir de la fondària (Di), la força de la
-      gravetat (g), i la pendent de la llera fluvial (S): */
+      gravetat (g), i la pendent de la llera fluvial (S):
+    */
     get ky(){return 0.6*this.Di*Math.sqrt(9.81*this.S*this.Di)};      //coeficient de dispersió lateral (ky)
     get Ll(){return Math.pow(this.wi,2)*this.Qi/this.Ai/(2*this.ky);} //longitud del tram de barreja lateral (Ll)
+  /*_*/
 
   /*empaqueta els resultats*/
-  get resultats(){return{
-    angle  :{value:this.angle,   unit:"rad",   descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
-    Dt     :{value:this.Dt,      unit:"m",     descr:"Fondària màxima"},
-    wi     :{value:this.wi,      unit:"m",     descr:"Amplada de la llera inundada"},
-    Ai     :{value:this.Ai,      unit:"m2",    descr:"Àrea transversal inundada"},
-    wpi    :{value:this.wpi,     unit:"m",     descr:"Perímetre humit inundat"},
-    HRi    :{value:this.HRi,     unit:"m",     descr:"Radi hidràulic"},
-    Qi     :{value:this.Qi,      unit:"m3/s",  descr:"Cabal en m3/s"},
-    Qi_MLd :{value:this.Qi_MLd,  unit:"ML/d",  descr:"Cabal en ML/d"},
-    HRTi   :{value:this.HRTi,    unit:"min",   descr:"Temps mig de residència de l'aigua"},
-    Vi     :{value:this.Vi,      unit:"m/min", descr:"Velocitat mitjana"},
-    Si     :{value:this.Si,      unit:"m2",    descr:"Superfície inundada"},
-    //ky   :{value:this.ky,      unit:"?",     descr:"Coeficient de dispersió lateral"},
-    //Ll   :{value:this.Ll,      unit:"m",     descr:"Longitud del tram de barreja lateral"},
-  }};
-
-  //massa o càrrega al final del tram 'Mf' degut a la degradació per un sol component 'Mi'
-  //en un futur es reemplaçarà per un model més complet
-  Mf(Mi,R_20,k){
-    //Mi  : massa a l'inici del tram fluvial: suma dels diferents trams que alimenten el tram (kg)
-    //R_20: velocitat de reacció a 20ºC (g/m2·min)
-    //k   : (input, es com una ks) (g/m3)
-    let Mf = Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20)*(Mi/(this.Qi*60))/(k+Mi/this.Qi);
-
-    if(Mi==0) Mf=0;
-    if(Mf<0) Mf=0;
+  get resultats(){ //->Object
     return {
-      Mf:{value:Mf, unit:"kg", descr:"massa al final del tram fluvial"},
-    }
+      Qi     :{value:this.Qi,      unit:"m3/s",  descr:"Cabal en m3/s"},
+      Qi_MLd :{value:this.Qi_MLd,  unit:"ML/d",  descr:"Cabal en ML/d"},
+      angle  :{value:this.angle,   unit:"rad",   descr:"Angle &alpha; entre la llera i el màxim del canal (bankful)"},
+      Dt     :{value:this.Dt,      unit:"m",     descr:"Fondària màxima"},
+      wi     :{value:this.wi,      unit:"m",     descr:"Amplada de la llera inundada"},
+      Ai     :{value:this.Ai,      unit:"m2",    descr:"Àrea transversal inundada"},
+      wpi    :{value:this.wpi,     unit:"m",     descr:"Perímetre humit inundat"},
+      HRi    :{value:this.HRi,     unit:"m",     descr:"Radi hidràulic"},
+      HRTi   :{value:this.HRTi,    unit:"min",   descr:"Temps mig de residència de l'aigua"},
+      Vi     :{value:this.Vi,      unit:"m/min", descr:"Velocitat mitjana"},
+      Si     :{value:this.Si,      unit:"m2",    descr:"Superfície inundada"},
+      //ky   :{value:this.ky,      unit:"?",     descr:"Coeficient de dispersió lateral"},
+      //Ll   :{value:this.Ll,      unit:"m",     descr:"Longitud del tram de barreja lateral"},
+    };
   };
 
-  static get info(){
+  //Mf: massa o càrrega al final del tram degut a la degradació per un sol component 'Mi'
+  calcula_Mf(Mi, R_20){ //->Object
+    //Mi  : massa a l'inici del tram fluvial: suma dels diferents trams que alimenten el tram (kg)
+    //R_20: velocitat de reacció a 20ºC (g/m2·min)
+    let Mf = Mi - R_20*this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20);
+
+    if(Mi==0) Mf=0;
+    if(Mf <0) Mf=0;
+
+    return {
+      value: Mf,
+      unit:"kg",
+      descr:"massa al final del tram fluvial",
+    };
+  };
+
+  //càlcul invers de "calcula_Mf"
+  //R_20: velocitat de reacció a 20ºC (g/m2·min)
+  calcula_R_20(Mi,Mf){ //->Object
+    //Mi: massa a l'inici del tram fluvial: suma dels diferents trams que alimenten el tram (kg)
+    //Mf: massa al final  del tram fluvial
+    if(Mi==0) Mf=0;
+    if(Mf <0) Mf=0;
+
+    let R_20 = (Mi - Mf)/(this.HRTi*this.Si*Math.pow(1.0241,this.Ti-20));
+
+    return {
+      value: R_20,
+      unit:"g/m2·min",
+      descr:"velocitat de reacció a 20ºC",
+    };
+  };
+
+  static get info(){ //->Object
     return {
       wb:{unit:"m",  descr:"Amplada a llera mitjana"},
       wt:{unit:"m",  descr:"Amplada a bankful mitjana"},
@@ -93,7 +116,7 @@ class Tram {
       Di:{unit:"m",  descr:"Fondària concreta"},
       Ti:{unit:"ºC", descr:"Temperatura"},
     }
-  }
+  };
 }
 
 //export class

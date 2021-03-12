@@ -104,7 +104,6 @@
   let inputs_degradacio ={
     Mi  :{value:10,    unit:"kg",       descr:"massa inici tram fluvial: suma dels diferents trams que alimenten el tram"},
     R_20:{value:0.001, unit:"g/m2·min", descr:"velocitat de reacció a 20ºC"},
-    k   :{value:10,    unit:"g/m3",     descr:"constant de degradació (és com una ks)"},
   };
 
   //DOM
@@ -152,10 +151,9 @@
     table_outputs_degradacio.innerHTML="";
 
     let resultats            = tram.resultats;
-    let resultats_degradacio = tram.Mf(
+    let resultats_degradacio = tram.calcula_Mf(
       parseFloat(document.querySelector('#inputs_degradacio #Mi').value),
       parseFloat(document.querySelector('#inputs_degradacio #R_20').value),
-      parseFloat(document.querySelector('#inputs_degradacio #k').value),
     );
 
     function print_resultats(taula, objecte){

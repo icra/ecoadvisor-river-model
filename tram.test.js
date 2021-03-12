@@ -1,6 +1,5 @@
-try{
-  Tram = require("./tram.js"); //class Tram
-}catch(e){}
+//import Tram class
+Tram = require("./tram.js"); //class
 
 //test static method
 console.log(Tram.info);

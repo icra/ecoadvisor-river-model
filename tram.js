@@ -23,7 +23,13 @@ class Tram {
 
   /*càlculs equacions pdf*/
     //calcula angle "alfa" entre la llera i el màxim del canal (bankfull) (radiants)
-    get angle(){return Math.asin((this.wt-this.wb)/(2*this.Db));}
+    get angle(){
+      let sin = (this.wt-this.wb)/(2*this.Db);
+      if(sin > 1 || sin < -1){
+        console.warn(`angle cannot be calculated (arcsin(x) is defined xE[-1,+1], but got '${sin}' as parameter)`);
+      }
+      return Math.asin(sin);
+    }
 
     //calcula fondària màxima (m)
     get Dt(){return this.Db*Math.cos(this.angle);}
@@ -103,6 +109,31 @@ class Tram {
       unit:"g/m2·min",
       descr:"velocitat de reacció a 20ºC",
     };
+  };
+
+  //calcula fondària concreta ("Di") necessària per un cabal "x" ML/d
+  //l'eqüació s'hi arriba desfent l'equació de Qi
+  //  Qi = (1/n)*pow(HRi,2/3)*sqrt(S)
+  calcula_Di_a_partir_de_Qi(Qi_MLd){
+    let angle = this.angle;
+    let wb    = this.wb;
+    let wt    = this.wt;
+
+    let Qi    = Qi_MLd/86.4; //converteix a m3/s
+    let HRi   = Math.pow(Qi*this.n/Math.sqrt(this.S), 3/2); //m  | radi hidràulic
+
+    //per trobar Di:
+    //resol eq de 2n grau: ax^2+bx+c=0
+    let a = Math.tan(angle);
+    let b = wb - 2*HRi/Math.cos(angle);
+    let c = -HRi*wb;
+    // x = (-b (+-) sqrt(b*b - 4ac)) / 2a
+    let Di_1 = (-b + Math.sqrt(b*b - 4*a*c))/(2*a);
+    let Di_2 = (-b - Math.sqrt(b*b - 4*a*c))/(2*a);
+
+    //console.log(`resultats: ${Di_1}, ${Di_2}`);
+    //retorna només el resultat positiu
+    return Math.max(Di_1, Di_2);
   };
 
   static get info(){ //->Object

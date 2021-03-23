@@ -26,7 +26,7 @@ class Tram {
     get angle(){
       let sin = (this.wt-this.wb)/(2*this.Db);
       if(sin > 1 || sin < -1){
-        console.warn(`angle cannot be calculated (arcsin(x) is defined xE[-1,+1], but got '${sin}' as parameter)`);
+        console.warn(`arcsin(x) is defined x=[-1,+1], but got 'x=${sin.toFixed(4)}' instead`);
       }
       return Math.asin(sin);
     }

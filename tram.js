@@ -9,6 +9,15 @@
 
 class Tram {
   constructor(wb,wt,Db,S,n,Li,Di,Ti){
+    /*
+      Esquema secció transversal del tram de riu (trapezi)
+
+      _____|__________wt_________|_____
+            \   |Dt             /
+             \--+-----wi----+--/
+            Db\ | Ai      Di| /
+               \|_____wb____|/
+    */
     //inputs i default values
     this.wb = isNaN(wb) ? 3      : wb; //amplada a llera mitjana (m)
     this.wt = isNaN(wt) ? 6      : wt; //amplada a bankful mitjana (m)
@@ -118,6 +127,7 @@ class Tram {
     let angle = this.angle;
     let wb    = this.wb;
     let wt    = this.wt;
+    let Dt    = this.Dt; //maxim valor possible
 
     let Qi    = Qi_MLd/86.4; //converteix a m3/s
     let HRi   = Math.pow(Qi*this.n/Math.sqrt(this.S), 3/2); //m  | radi hidràulic
@@ -132,8 +142,20 @@ class Tram {
     let Di_2 = (-b - Math.sqrt(b*b - 4*a*c))/(2*a);
 
     //console.log(`resultats: ${Di_1}, ${Di_2}`);
-    //retorna només el resultat positiu
-    return Math.max(Di_1, Di_2);
+    //queda't només el resultat positiu
+    let Di = Math.max(Di_1, Di_2);
+
+    //la Di NO pot ser més gran que la Dt
+    return Math.min(Di,Dt);
+  };
+
+  //calcula Db en cas que la Dt sigui mesurada
+  //necessita wt, wb definits i Dt com a paràmetre
+  calcula_Db_a_partir_de_Dt(Dt){
+    let catet1 = (this.wt-this.wb)/2;
+    let catet2 = Dt;
+    let Db     = Math.sqrt( catet1*catet1 + catet2*catet2 ); //pitàgores
+    return Db;
   };
 
   static get info(){ //->Object
